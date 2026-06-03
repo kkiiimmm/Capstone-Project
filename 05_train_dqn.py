@@ -9,10 +9,10 @@ from torch import nn
 # Easy-to-modify constants
 K = 6
 INPUT_DIM = K * K
-POWER_CANDIDATES = np.array([1e-10, 0.33, 0.66, 0.99])
+POWER_CANDIDATES = np.array([0.25, 0.5, 0.75, 1.0])
 NUM_POWER_CANDIDATES = len(POWER_CANDIDATES)
 NUM_ACTIONS = NUM_POWER_CANDIDATES ** K
-NOISE_POWER = 1e-9
+NOISE_POWER = 1e-6
 EPSILON = 1e-30
 RANDOM_SEED = 42
 

@@ -9,10 +9,10 @@ from torch.utils.data import DataLoader, TensorDataset
 # Easy-to-modify constants
 K = 6
 INPUT_DIM = K * K
-POWER_CANDIDATES = np.array([1e-10, 0.33, 0.66, 0.99])
+POWER_CANDIDATES = np.array([0.25, 0.5, 0.75, 1.0])
 NUM_POWER_CANDIDATES = len(POWER_CANDIDATES)
 OUTPUT_DIM = K * NUM_POWER_CANDIDATES
-NOISE_POWER = 1e-9
+NOISE_POWER = 1e-6
 EPSILON = 1e-30
 RANDOM_SEED = 42
 

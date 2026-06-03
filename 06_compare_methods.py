@@ -5,8 +5,8 @@ import numpy as np
 
 K = 6
 INPUT_DIM = K * K
-NOISE_POWER = 1e-9
-POWER_CANDIDATES = np.array([1e-10, 0.33, 0.66, 0.99])
+NOISE_POWER = 1e-6
+POWER_CANDIDATES = np.array([0.25, 0.5, 0.75, 1.0])
 RANDOM_SEED = 42
 ON_THRESHOLD = 1e-5
 
