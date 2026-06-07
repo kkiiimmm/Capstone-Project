@@ -18,7 +18,7 @@ NUM_INTERFERENCE_LINKS = 8;
 NOISE_POWER = 1e-6;
 EPSILON = 1e-30;
 ON_THRESHOLD = 1e-5;
-POWER_CANDIDATES = [0.25, 0.5, 0.75, 1.0];
+POWER_CANDIDATES = [0.0, 0.25, 0.5, 0.75, 1.0];
 RANDOM_SEED = 42;
 
 if exist('figures', 'dir') ~= 7
@@ -232,7 +232,7 @@ dqn_capacity = dqn_result(1:sample_count, 3);
 rand('seed', RANDOM_SEED);
 random_capacity = zeros(sample_count, 1);
 allmax_capacity = zeros(sample_count, 1);
-allmax_power = 0.99 * ones(1, K);
+allmax_power = 1.0 * ones(1, K);
 for i = 1:sample_count
     H_i = reshape(H_test_used(i, :), [K, K])';
     random_indices = floor(rand(1, K) * length(POWER_CANDIDATES)) + 1;

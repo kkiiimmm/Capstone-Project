@@ -6,7 +6,7 @@ import numpy as np
 # Easy-to-modify constants
 K = 6
 INPUT_DIM = K * K
-POWER_CANDIDATES = np.array([0.25, 0.5, 0.75, 1.0])
+POWER_CANDIDATES = np.array([0.0, 0.25, 0.5, 0.75, 1.0])
 NOISE_POWER = 1e-6
 RANDOM_SEED = 42
 BITS_PER_ROUTER = 10000
@@ -47,9 +47,17 @@ def load_methods():
 
 
 def add_baselines(powers, n, rng):
-    """Append non-AI baselines: random pick and all-max."""
-    powers["Random"] = rng.choice(POWER_CANDIDATES, size=(n, K))
-    powers["All-max"] = np.full((n, K), 0.99)
+    """Append non-AI baselines: random pick and all-max.
+
+    Random powers are drawn per sample (one rng.choice of size K for each of
+    the n samples), matching the convention used in 04/05/06 so the baselines
+    stay comparable across scripts.
+    """
+    random_power = np.zeros((n, K))
+    for i in range(n):
+        random_power[i] = rng.choice(POWER_CANDIDATES, size=K)
+    powers["Random"] = random_power
+    powers["All-max"] = np.full((n, K), 1.0)
     return powers
 
 
@@ -58,11 +66,12 @@ def simulate_active_links(H, P, bits_per_router, rng):
     Simulate BPSK transmission for one channel realization.
 
     Each router m sends random +-1 symbols with amplitude sqrt(P_m * H[k,m]).
-    Routers with P_m <= ON_THRESHOLD are treated as silent (no bits sent),
-    but their tiny leak still appears in the received signal at every device.
+    Routers turned OFF (P_m = 0, i.e. P_m <= ON_THRESHOLD) transmit no bits and
+    contribute no signal: their amplitude sqrt(0 * H) = 0, so they neither serve
+    their own device nor interfere with any other device.
 
     Returns active_mask and bit_errors per router (errors meaningful only
-    where active_mask is True, since silent routers transmit no bits).
+    where active_mask is True, since OFF routers transmit no bits).
     """
     active_mask = P > ON_THRESHOLD
     amplitudes = np.sqrt(P[np.newaxis, :] * H)

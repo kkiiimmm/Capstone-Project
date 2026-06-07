@@ -9,7 +9,7 @@ from torch.utils.data import DataLoader, TensorDataset
 # Easy-to-modify constants
 K = 6
 INPUT_DIM = K * K
-POWER_CANDIDATES = np.array([0.25, 0.5, 0.75, 1.0])
+POWER_CANDIDATES = np.array([0.0, 0.25, 0.5, 0.75, 1.0])
 NUM_POWER_CANDIDATES = len(POWER_CANDIDATES)
 OUTPUT_DIM = K * NUM_POWER_CANDIDATES
 NOISE_POWER = 1e-6
@@ -252,7 +252,7 @@ def evaluate_model(model, X_test, H_test, label_test):
 def evaluate_baselines(H_test, label_test):
     fullsearch_capacity = label_test[:, 0]
 
-    all_max_power = np.full(K, 0.99, dtype=np.float32)
+    all_max_power = np.full(K, 1.0, dtype=np.float32)
     all_max_capacity = np.array(
         [numpy_sum_capacity(H_test[i], all_max_power, NOISE_POWER) for i in range(H_test.shape[0])]
     )

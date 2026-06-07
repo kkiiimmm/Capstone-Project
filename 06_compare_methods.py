@@ -6,7 +6,7 @@ import numpy as np
 K = 6
 INPUT_DIM = K * K
 NOISE_POWER = 1e-6
-POWER_CANDIDATES = np.array([0.25, 0.5, 0.75, 1.0])
+POWER_CANDIDATES = np.array([0.0, 0.25, 0.5, 0.75, 1.0])
 RANDOM_SEED = 42
 ON_THRESHOLD = 1e-5
 
@@ -86,7 +86,7 @@ def compute_baseline_capacities(H_test):
 
     random_capacity = np.zeros(H_test.shape[0])
     allmax_capacity = np.zeros(H_test.shape[0])
-    allmax_power = np.full(K, 0.99)
+    allmax_power = np.full(K, 1.0)
 
     for i in range(H_test.shape[0]):
         H = H_test[i].reshape(K, K)

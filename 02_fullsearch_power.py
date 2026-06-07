@@ -6,7 +6,7 @@ import numpy as np
 # Easy-to-modify constants
 K = 6
 INPUT_DIM = K * K
-POWER_CANDIDATES = np.array([0.25, 0.5, 0.75, 1.0])
+POWER_CANDIDATES = np.array([0.0, 0.25, 0.5, 0.75, 1.0])
 NOISE_POWER = 1e-6
 
 DATA_DIR = Path("data")

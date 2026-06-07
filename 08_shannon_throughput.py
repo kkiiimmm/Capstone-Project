@@ -6,7 +6,7 @@ import numpy as np
 # Easy-to-modify constants
 K = 6
 INPUT_DIM = K * K
-POWER_CANDIDATES = np.array([0.25, 0.5, 0.75, 1.0])
+POWER_CANDIDATES = np.array([0.0, 0.25, 0.5, 0.75, 1.0])
 NOISE_POWER = 1e-6
 RANDOM_SEED = 42
 CHANNEL_USES_PER_SAMPLE = 10000  # matches BITS_PER_ROUTER in 07 for fair comparison
@@ -46,8 +46,16 @@ def load_methods():
 
 
 def add_baselines(powers, n, rng):
-    """Append non-AI baselines: random pick and all-max."""
-    powers["Random"] = rng.choice(POWER_CANDIDATES, size=(n, K))
+    """Append non-AI baselines: random pick and all-max.
+
+    Random powers are drawn per sample (one rng.choice of size K for each of
+    the n samples), matching the convention used in 04/05/06 so the baselines
+    stay comparable across scripts.
+    """
+    random_power = np.zeros((n, K))
+    for i in range(n):
+        random_power[i] = rng.choice(POWER_CANDIDATES, size=K)
+    powers["Random"] = random_power
     powers["All-max"] = np.full((n, K), 1.0)
     return powers
 
