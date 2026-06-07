@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Final AI Power Control Dashboard</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div>
+        <p class="eyebrow">Final experiment</p>
+        <h1>AI 송신 전력 제어 대시보드</h1>
+      </div>
+      <div class="setup">
+        <span>K = 6</span>
+        <span>Noise = 1e-6</span>
+        <span>Power = 0 / 0.25 / 0.5 / 0.75 / 1.0</span>
+      </div>
+    </header>
+
+    <main>
+      <section class="cards" id="methodCards" aria-label="method summary"></section>
+
+      <section class="grid">
+        <article class="panel wide">
+          <div class="panel-head">
+            <div>
+              <p class="eyebrow">Capacity benchmark</p>
+              <h2>Full-search 대비 평균 용량비</h2>
+            </div>
+            <p>Supervised DNN과 Unsupervised DNN이 최적 기준에 가장 가깝습니다.</p>
+          </div>
+          <div class="bar-chart" id="ratioBars"></div>
+        </article>
+
+        <article class="panel">
+          <div class="panel-head compact">
+            <div>
+              <p class="eyebrow">Link selection</p>
+              <h2>평균 활성 링크 수</h2>
+            </div>
+          </div>
+          <div class="mini-bars" id="activeBars"></div>
+        </article>
+
+        <article class="panel wide">
+          <div class="panel-head">
+            <div>
+              <p class="eyebrow">Sample preview</p>
+              <h2>샘플별 용량비 추세</h2>
+            </div>
+            <p>앞 8개 테스트 샘플입니다. y축은 0.25~1.00 기준입니다.</p>
+          </div>
+          <svg id="ratioTrace" class="line-chart" viewBox="0 0 940 360" role="img"></svg>
+          <div class="legend" id="traceLegend"></div>
+        </article>
+
+        <article class="panel">
+          <div class="panel-head compact">
+            <div>
+              <p class="eyebrow">Sample 559</p>
+              <h2>선택된 송신 전력</h2>
+            </div>
+          </div>
+          <div class="power-list" id="powerList"></div>
+        </article>
+
+        <article class="panel">
+          <div class="panel-head compact">
+            <div>
+              <p class="eyebrow">Uncoded BPSK</p>
+              <h2>Active-link BER</h2>
+            </div>
+          </div>
+          <div class="metric-bars" id="berBars"></div>
+        </article>
+
+        <article class="panel">
+          <div class="panel-head compact">
+            <div>
+              <p class="eyebrow">Ideal coding</p>
+              <h2>Reliable bits / sample</h2>
+            </div>
+          </div>
+          <div class="metric-bars" id="shannonBars"></div>
+        </article>
+      </section>
+
+      <section class="figure-grid" aria-label="generated figures">
+        <figure>
+          <img src="../figures/network_test_sample.png" alt="테스트 네트워크 배치" />
+          <figcaption>테스트 네트워크 배치</figcaption>
+        </figure>
+        <figure>
+          <img src="../figures/test_interference_graph.png" alt="목표 링크와 강한 간섭 링크" />
+          <figcaption>목표 링크와 강한 간섭 링크</figcaption>
+        </figure>
+        <figure>
+          <img src="../figures/power_allocation_sample.png" alt="샘플 전력 할당" />
+          <figcaption>샘플 전력 할당</figcaption>
+        </figure>
+        <figure>
+          <img src="../figures/router_on_ratio.png" alt="라우터 활성 비율" />
+          <figcaption>라우터 활성 비율</figcaption>
+        </figure>
+      </section>
+    </main>
+
+    <script src="app.js"></script>
+  </body>
+</html>
