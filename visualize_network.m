@@ -286,12 +286,53 @@ print(gcf, '-dpng', '-r300', 'figures/average_capacity_ratio.png');
 % 7. Capacity ratio boxplot
 % -------------------------------------------------------------------------
 figure('Color', 'w', 'Visible', 'off', 'Toolbar', 'none', 'Menubar', 'none');
-boxplot([dnn_ratio, unsup_hard_ratio, dqn_ratio, random_ratio, allmax_ratio], ...
-    'Labels', {'DNN', 'Unsup', 'DQN', 'Random', 'All-max'});
+set(gca, 'NextPlot', 'add');
+ratio_matrix = [dnn_ratio, unsup_hard_ratio, dqn_ratio, random_ratio, allmax_ratio];
+box_width = 0.55;
+for method_index = 1:size(ratio_matrix, 2)
+    sorted_ratio = sort(ratio_matrix(:, method_index));
+    n = length(sorted_ratio);
+
+    % Linear-interpolated quartiles without the Statistics Toolbox.
+    quartiles = zeros(1, 3);
+    probabilities = [0.25, 0.50, 0.75];
+    for quartile_index = 1:3
+        position = 1 + (n - 1) * probabilities(quartile_index);
+        lower_index = floor(position);
+        upper_index = ceil(position);
+        fraction = position - lower_index;
+        quartiles(quartile_index) = sorted_ratio(lower_index) * (1 - fraction) + ...
+            sorted_ratio(upper_index) * fraction;
+    end
+
+    q1 = quartiles(1);
+    median_value = quartiles(2);
+    q3 = quartiles(3);
+    iqr_value = q3 - q1;
+    lower_fence = q1 - 1.5 * iqr_value;
+    upper_fence = q3 + 1.5 * iqr_value;
+    lower_whisker = min(sorted_ratio(sorted_ratio >= lower_fence));
+    upper_whisker = max(sorted_ratio(sorted_ratio <= upper_fence));
+
+    patch(method_index + [-box_width, box_width, box_width, -box_width] / 2, ...
+        [q1, q1, q3, q3], [0.75, 0.85, 1.00], 'EdgeColor', 'b');
+    plot(method_index + [-box_width, box_width] / 2, ...
+        [median_value, median_value], 'r-', 'LineWidth', line_width);
+    plot([method_index, method_index], [lower_whisker, q1], 'k-');
+    plot([method_index, method_index], [q3, upper_whisker], 'k-');
+    plot(method_index + [-box_width, box_width] / 4, ...
+        [lower_whisker, lower_whisker], 'k-');
+    plot(method_index + [-box_width, box_width] / 4, ...
+        [upper_whisker, upper_whisker], 'k-');
+
+    outliers = sorted_ratio(sorted_ratio < lower_whisker | sorted_ratio > upper_whisker);
+    plot(method_index * ones(size(outliers)), outliers, 'r+', 'MarkerSize', 3);
+end
 grid on;
 ylabel('Capacity ratio', 'FontSize', font_size);
 title('Capacity Ratio Distribution', 'FontSize', font_size + 2);
-set(gca, 'FontSize', font_size);
+set(gca, 'XTick', 1:5, 'XTickLabel', {'DNN', 'Unsup', 'DQN', 'Random', 'All-max'}, ...
+    'XLim', [0.5, 5.5], 'FontSize', font_size);
 print(gcf, '-dpng', '-r300', 'figures/capacity_ratio_boxplot.png');
 
 % -------------------------------------------------------------------------
